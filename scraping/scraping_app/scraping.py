@@ -63,7 +63,8 @@ def green(occupation, count):
         # 追加
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-
+        options.add_argument('--headless')
+			
         # ChromeのWebDriverオブジェクトを作成する。
         # service=Service(ChromeDriverManager().install())
         # return Chrome(service=service, options=options)

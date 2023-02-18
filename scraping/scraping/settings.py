@@ -14,8 +14,16 @@ SECRET_KEY = 'django-insecure-7p=d&2zjxi)$d18486wymn94+)bpvade%5)r4ga33_ibzsck$2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+replit_appname='django02sasazawa17230217'
+replit_username='devnekoreplit'
+CSRF_TRUSTED_ORIGINS=[
+	'https://'+replit_appname+'.'+replit_username+'.repl.co',
+	'https://examples.dev-neko.com',
+	'https://www.green-japan.com/',
+]
+CORS_ORIGIN_WHITELIST=['https://'+replit_appname+'.'+replit_username+'.repl.co']
 
 # Application definition
 
@@ -107,6 +115,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = (
+	os.path.join(BASE_DIR, 'static'),
+)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
