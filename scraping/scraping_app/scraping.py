@@ -25,8 +25,8 @@ def makedir_for_filepath(filepath: str):
 # グリーン
 def green(occupation, count):
     
-    # ドライバの定義
-    def set_driver():
+    # ドライバの定義 bk
+    def set_driver_bk():
         '''
         Chromeを自動操作するためのChromeDriverを起動してobjectを取得する
         '''
@@ -44,6 +44,30 @@ def green(occupation, count):
         # ChromeのWebDriverオブジェクトを作成する。
         service=Service(ChromeDriverManager().install())
         return Chrome(service=service, options=options)
+
+    # ドライバの定義
+    def set_driver():
+        '''
+        Chromeを自動操作するためのChromeDriverを起動してobjectを取得する
+        '''
+        USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+        options = ChromeOptions()
+
+        # 起動オプションの設定
+        options.add_argument(f'--user-agent={USER_AGENT}') # ブラウザの種類を特定するための文字列
+        options.add_argument('log-level=3') # 不要なログを非表示にする
+        options.add_argument('--ignore-certificate-errors') # 不要なログを非表示にする
+        options.add_argument('--ignore-ssl-errors') # 不要なログを非表示にする
+        # options.add_experimental_option('excludeSwitches', ['enable-logging']) # 不要なログを非表示にする
+        options.add_argument('--incognito') # シークレットモードの設定を付与
+        # 追加
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+
+        # ChromeのWebDriverオブジェクトを作成する。
+        # service=Service(ChromeDriverManager().install())
+        # return Chrome(service=service, options=options)
+        return Chrome(options=options)
 
     item_info = []
     driver = set_driver()
@@ -104,53 +128,53 @@ def green(occupation, count):
             break
     
 
-    scope = ['https://spreadsheets.google.com/feeds',
-            'https://www.googleapis.com/auth/drive']
-    json_keyfile_path = '**************'
-
-    # サービスアカウントキーを読み込む
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        json_keyfile_path, scope)
-
-    # pydrive用にOAuth認証を行う
-    gauth = GoogleAuth()
-    gauth.credentials = credentials
-    drive = GoogleDrive(gauth)
-
-    folder_id = '**************'
-    now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    EXP_FILE = f"Green_list_{now}"
-    f = drive.CreateFile({
-        'title': EXP_FILE,
-        'mimeType': 'application/vnd.google-apps.spreadsheet',
-        "parents": [{"id": folder_id}]})
-    f.Upload()
-
-    # 作成したスプレッドシートの情報を出力
-    pprint.pprint(f)
-
-    # gspread用に認証
-    gc = gspread.authorize(credentials)
-
-    # スプレッドシートのIDを指定してワークブックを選択
-    workbook = gc.open_by_key(f['id'])
-    worksheet = workbook.sheet1
-    
-    # 1行目の1~3列目に入力
-    worksheet.update_cell(1, 1, '企業名')
-    worksheet.update_cell(1, 2, '求人名')
-    worksheet.update_cell(1, 3, '給与')
-    worksheet.update_cell(1, 4, '勤務地')
-    worksheet.update_cell(1, 5, '詳細ページ')
-    
-    cnt = 2
-    for item in item_info:
-        worksheet.update_cell(cnt, 1, item['企業名'])
-        worksheet.update_cell(cnt, 2, item['求人名'])
-        worksheet.update_cell(cnt, 3, item['給与'])
-        worksheet.update_cell(cnt, 4, item['勤務地'])
-        worksheet.update_cell(cnt, 5, item['詳細ページ'])
-        cnt += 1
+    # scope = ['https://spreadsheets.google.com/feeds',
+    #         'https://www.googleapis.com/auth/drive']
+    # json_keyfile_path = '**************'
+    #
+    # # サービスアカウントキーを読み込む
+    # credentials = ServiceAccountCredentials.from_json_keyfile_name(
+    #     json_keyfile_path, scope)
+    #
+    # # pydrive用にOAuth認証を行う
+    # gauth = GoogleAuth()
+    # gauth.credentials = credentials
+    # drive = GoogleDrive(gauth)
+    #
+    # folder_id = '**************'
+    # now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+    # EXP_FILE = f"Green_list_{now}"
+    # f = drive.CreateFile({
+    #     'title': EXP_FILE,
+    #     'mimeType': 'application/vnd.google-apps.spreadsheet',
+    #     "parents": [{"id": folder_id}]})
+    # f.Upload()
+    #
+    # # 作成したスプレッドシートの情報を出力
+    # pprint.pprint(f)
+    #
+    # # gspread用に認証
+    # gc = gspread.authorize(credentials)
+    #
+    # # スプレッドシートのIDを指定してワークブックを選択
+    # workbook = gc.open_by_key(f['id'])
+    # worksheet = workbook.sheet1
+    #
+    # # 1行目の1~3列目に入力
+    # worksheet.update_cell(1, 1, '企業名')
+    # worksheet.update_cell(1, 2, '求人名')
+    # worksheet.update_cell(1, 3, '給与')
+    # worksheet.update_cell(1, 4, '勤務地')
+    # worksheet.update_cell(1, 5, '詳細ページ')
+    #
+    # cnt = 2
+    # for item in item_info:
+    #     worksheet.update_cell(cnt, 1, item['企業名'])
+    #     worksheet.update_cell(cnt, 2, item['求人名'])
+    #     worksheet.update_cell(cnt, 3, item['給与'])
+    #     worksheet.update_cell(cnt, 4, item['勤務地'])
+    #     worksheet.update_cell(cnt, 5, item['詳細ページ'])
+    #     cnt += 1
     
     return item_info
 

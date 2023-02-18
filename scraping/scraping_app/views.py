@@ -30,4 +30,10 @@ def frontpage(request):
         siteform = SiteForm()
         count = ""
         conclusion = ""
-    return render(request, "frontpage.html", {"conclusion": conclusion, "form": form, "siteform": siteform, "count": count})
+        item_info=""
+    return render(request, "frontpage.html", {"conclusion": conclusion,
+                                              "form": form,
+                                              "siteform": siteform,
+                                              "count": count,
+                                              "item_info":item_info,
+                                              })
