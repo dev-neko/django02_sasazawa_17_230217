@@ -6,14 +6,17 @@ import pandas as pd
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
+
+
+
 
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 import pprint
-from selenium.webdriver.common.keys import Keys
 
 # CSVファイルパス
 EXP_CSV_PATH = "amazon_csv/exp_list_{datetime}.csv"
@@ -46,7 +49,7 @@ def green(occupation, count):
         return Chrome(service=service, options=options)
 
     # ドライバの定義
-    def set_driver():
+    def set_driver_bk2():
         '''
         Chromeを自動操作するためのChromeDriverを起動してobjectを取得する
         '''
@@ -70,8 +73,23 @@ def green(occupation, count):
         # return Chrome(service=service, options=options)
         return Chrome(options=options)
 
-    item_info = []
-    driver = set_driver()
+    def set_driver():
+     from selenium import webdriver
+     from selenium.webdriver.chrome.options import Options
+     chrome_options = Options()
+     chrome_options.add_argument('--no-sandbox')
+     chrome_options.add_argument('--disable-dev-shm-usage')
+     return webdriver.Chrome(options=chrome_options)
+
+
+
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    chrome_options = Options()
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(options=chrome_options)
     url = "https://www.green-japan.com/"
     
     driver.get(url)
@@ -83,6 +101,7 @@ def green(occupation, count):
     
     jobs = driver.find_elements(by=By.CSS_SELECTOR, value=".card-info__wrapper")
     
+    item_info = []
     offer_cnt = 0
     for job in jobs:
         # 求人名
